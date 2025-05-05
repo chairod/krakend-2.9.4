@@ -1,0 +1,87 @@
+<html>
+    <head>
+        <title>Client Application, Call Krakend Service</title>
+        <style>
+            button{
+                display:inline-block;
+                margin:10px;
+                padding: 10px;
+                box-shadow: 0px 0px 10px black;
+            }
+            button:nth-child(1){
+                margin-left: 0px!important;
+            }
+
+            div#logger{
+                padding:0px;
+            }
+            div#logger > div{
+                margin-bottom: 2px;
+                border: solid 1px #000;
+                padding-bottom: 2px;
+            }
+            div#logger > div > label{
+                font-weight:bold;
+                margin-right: 20px;
+                color:blue;
+            }
+        </style>
+    </head>
+    <body>
+        <h1 style="border-bottom:solid 2px black;padding-bottom:2px;">Client App Call krakend (<span style="color:red;">Required: Enable CORs)</span></h1>
+        <div><strong>Note:&nbsp;</strong>การเรียก Krakend จะต้องมีการเปิด Cors (Cross Origin resource sharing) เนื่องจาก Browser จะ Block หากมีการเรียก API ข้าม Domain, Krakend Domain: <span style="color:red;">http://localhost:8088</span></div>
+        
+        <div>
+            <button id="btn" data-endpoint="api/v1/get_user_with_array" data-method="get">โหลด User ได้รับ collection (Default ของ Krakend)</button>
+            <button id="btn" data-endpoint="api/v1/get_user_mapping" data-method="get">โหลด User เปลี่ยน Key = Users</button>
+            <button id="btn" data-endpoint="api/v1/get_user_deny" data-method="get">โหลด User ลบ CitizenId ออก</button>
+        </div>
+        <div id="logger"></div>
+        <script type="text/javascript">
+            var loggerEl = null;
+            window.onload = () => {
+                loggerEl = document.getElementById('logger');
+
+                var buttons = document.getElementsByTagName('button');
+                for(var ix=0;ix<buttons.length;ix++)
+                    buttons[ix].addEventListener('click', evt => {
+                        //console.log(evt.target.getAttribute('data-method'));
+                        fn_call_api(evt.target.getAttribute('data-endpoint'), evt.target.getAttribute('data-method'));
+                    });
+            };
+
+            const fn_write_log = message => {
+                const div = document.createElement('div');
+                const label = document.createElement('label');
+                const span = document.createElement('span');
+
+                label.innerHTML = `[${new Date().toLocaleString()}] DEBUG - `;
+                span.innerHTML = message;
+
+                div.appendChild(label);
+                div.appendChild(span);
+                loggerEl.appendChild(div);
+            }
+
+            const fn_call_api = (_endpoint, _method) => {
+                fetch(`http://localhost:8088/${_endpoint}`, {
+                    method: _method,
+                    mode: 'cors',
+                    headers:{
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => {
+                    loggerEl.innerHTML = '';
+                    fn_write_log(`Calling api endpoint: <strong>${_endpoint}</strong>`);
+                    return response.json();
+                })
+                .then(data => {
+                    fn_write_log(`Calling api endpoint: <strong>${JSON.stringify(data)}</strong>`);
+                }).catch(error => {
+                    fn_write_log(`<strong>${error}</strong>`);
+                })
+            };
+        </script>
+    </body>
+</html>

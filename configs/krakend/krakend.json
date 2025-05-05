@@ -1,0 +1,126 @@
+{
+  "$schema": "https://www.krakend.io/schema/krakend.json",
+  "version": 3,
+  "name": "Krakend playground",
+  "timeout": "3000ms",
+  "cache_ttl": "300s",
+  "output_encoding": "json",
+  "port": 8080,
+  "debug_endpoint": true,
+  "echo_endpoint": true,
+  "extra_config": {
+    "security/cors": {
+      "allow_methods": ["POST","GET"],
+      "allow_origins": ["localhost", "http://127.0.0.1:5500"],
+      "allow_headers": [
+        "Origin", "Authorization", "Content-Type"
+      ],
+      "max_age": "12h"
+    }
+  },
+  "endpoints": [
+    {
+      "@comment": "",
+      "endpoint": "/api/v1/get_user_with_array",
+      "method": "GET",
+      "output_encoding": "json",
+      "extra_config": {
+        "qos/ratelimit/router": {
+          "max_rate": 10,
+          "every": "1s"
+        }
+      },
+      "backend": [
+        {
+          "url_pattern": "/api/v1/user/getAll",
+          "encoding": "json",
+          "is_collection": true,
+          "sd": "static",
+          "method": "GET",
+          "host": [
+            "http://192.168.1.21:8001",
+            "http://192.168.1.21:8002",
+            "http://192.168.1.21:8003"
+          ],
+          "disable_host_sanitize": false
+        }
+      ]
+    },
+    {
+      "endpoint": "/api/v1/get_user_mapping",
+      "method": "GET",
+      "output_encoding": "json",
+      "backend": [
+        {
+          "url_pattern": "/api/v1/user/getAllRandomThrow",
+          "encoding": "json",
+          "is_collection": true,
+          "sd": "static",
+          "method": "GET",
+          "host": [
+            "192.168.1.21:8003"
+          ],
+          "mapping": {
+            "collection": "users"
+          },
+          "disable_host_sanitize": false,
+          "extra_config": {
+            "qos/circuit-breaker": {
+              "interval": 10,
+              "max_errors": 2,
+              "timeout": 0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "endpoint": "/api/v1/get_user_deny",
+      "method": "GET",
+      "output_encoding": "json",
+      "backend": [
+        {
+          "url_pattern": "/api/v1/user/getAll",
+          "encoding": "json",
+          "is_collection": true,
+          "sd": "static",
+          "method": "GET",
+          "host": [
+            "192.168.1.21:8003"
+          ],
+          "extra_config": {
+            "proxy": {
+              "flatmap_filter": [{
+                "type": "del",
+                "args": ["collection.*.citizenId"]
+              }
+              ,{
+                "type": "move",
+                "args": ["collection", "users"]
+              }]
+            }
+          },
+          "disable_host_sanitize": false
+        }
+      ]
+    },
+    {
+      "endpoint": "/api/v1/get_user/{prefix}",
+      "method": "GET",
+      "output_encoding": "json-collection",
+      "backend": [
+        {
+          "url_pattern": "/api/v1/user/getAll/{prefix}",
+          "encoding": "json",
+          "is_collection": true,
+          "sd": "static",
+          "method": "GET",
+          "host": [
+            "192.168.1.21:8003"
+          ],
+          "disable_host_sanitize": false
+        }
+      ]
+    }
+  ]
+}
