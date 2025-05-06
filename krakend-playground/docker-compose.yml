@@ -1,0 +1,32 @@
+services:
+  krakend:
+    container_name: "krakend-2.9.4"
+    image: krakend:2.9.4
+    volumes:
+      - ../configs/krakend:/etc/krakend
+    ports:
+      - "8080:8080"
+      - "8090:8090" # Port ของ telemetry
+    command: ["run", "-d", "-c", "/etc/krakend/krakend.json"]
+  
+
+  prometheus:
+    container_name: "prometheus"
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
+    volumes:
+      - "./telemetry-dashboard/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml"
+
+
+  grafana:
+    container_name: "grafana"
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    environment:
+      GF_SECURITY_ADMIN_USER: krakend
+      GF_SECURITY_ADMIN_PASSWORD: krakend
+      GF_AUT_ANONYMOUS_ENABLED: "true"
+
+  

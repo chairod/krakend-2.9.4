@@ -4,7 +4,7 @@ A. Pull commercial krakend image จาก dockerhub
 ```
 docker pull krakend:2.9.4  
 ```
-B. รัน Krakend จาก Image ที่ Pull จาก dockerhub ในข้อ A  
+B. รัน Krakend จาก Image ที่ Pull จาก dockerhub ในข้อ A <font color="red">ก่อนจะใช้งาน Gateway ได้ ให้รัน docker compose ในขั้นตอน **โครงสร้างของโครงการ > ข้อ D ด้วย**</font>  
 ```
 docker run --rm -p 8080:8080 --name docker-commu -v .:/etc/krakend krakend:2.9.4 run --config /etc/krakend/krakend.json
 ```
@@ -67,7 +67,7 @@ maven clean package
 ```  
 jar file จะไปอยู่ที่ **targets/krakend-api-0.0.1.jar** และให้คัดลอกไปไว้ที่ **springboot/services/jar**  
 
-D. FOLDER: **springboog/services** เป็น docker-compose ที่สร้าง Service แยกเอาไว้ เพื่อทดสอบการทำงานของ Load balance  ซึ่งโครงการนี้จะทดสอบ Krakend Community รองรับ **Load balance** เฉพาะ Round-Robin และ Stragtegy อื่นๆ เช่น weighted, circuit breaker, และ health checks  จะอยู่ใน Enterpise  
+D. FOLDER: **springboot/services** เป็น docker-compose ที่สร้าง Service แยกเอาไว้ เพื่อทดสอบการทำงานของ Load balance  ซึ่งโครงการนี้จะทดสอบ Krakend Community รองรับ **Load balance** เฉพาะ Round-Robin และ Stragtegy อื่นๆ เช่น weighted, circuit breaker, และ health checks  จะอยู่ใน Enterpise  
 <font color="red">**Service นี้จะถูก build มาจาก โครงการ C. springboot/krakend-api**</font>  
 <font color="red">cd เข้าไปที่ springboot/services แล้วสั่งรันคำสั่งด้านล่าง เพื่อเปิด Service</font>  
 ```
@@ -76,11 +76,19 @@ docker-compose up
 
 
 E. KrakenD_integration_FullGuide.ppt  เป็นเอกสารการนำเสนอการทดสอบ Feature บางส่วนของ Krakend ซึ่งประกอบด้วย  
-> วิธีการ Install  
-> Configuration  
-> Security Section  
-> Traffic Management  
-> Monitoring, Log, Analysis   
+> A. วิธีการ Install  
+> B. Configuration  
+> C. Security Section  
+> D. Traffic Management  
+> E. Monitoring, Log, Analysis   
+
+
+F. jmeter-concurrency.jmx  
+Jmeter file template ที่สร้างเอาไว้เพื่อทดสอบ Krakend Gateway ในส่วนของ Rate limit, Load Balance  
+เปิด Command-line ขึ้นมาแล้วพิมพ์ คำสั่งด้านล่างเพื่อเปิด JMeter และโหลด Template ในโครงการนี้เข้าไป เพื่อยิงทดสอบ  
+```
+jmeter
+```
 
 
 
