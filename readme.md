@@ -5,8 +5,18 @@ A. Pull commercial krakend image จาก dockerhub
 docker pull krakend:2.9.4  
 ```
 B. รัน Krakend จาก Image ที่ Pull จาก dockerhub ในข้อ A <font color="red">ก่อนจะใช้งาน Gateway ได้ ให้รัน docker compose ในขั้นตอน **โครงสร้างของโครงการ > ข้อ D ด้วย**</font>  
+> เปลี่ยนตำแหน่ง Current Directory ไปอยู่ที่  **configs/krakend**  
+```
+cd configs/krakend
+```
+> รันคำสั่งด้านล่างนี้เพื่อเปิด Krakend API Gateway  
 ```
 docker run --rm -p 8080:8080 --name docker-commu -v .:/etc/krakend krakend:2.9.4 run --config /etc/krakend/krakend.json
+```
+> เปิด backend service เพื่อให้ krakend เชื่อมต่อไปยัง API หลังบ้านได้
+```
+cd springboot/services
+docker-compose up
 ```
 
 #### Note:  
