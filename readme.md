@@ -22,6 +22,7 @@ docker-compose up
 > หลังรันเสร็จแล้วให้เปิด Browser เพื่อทดสอบ  
 ```
 http://localhost:8080/api/v1/get_user_with_array
+http://localhost:8080/api/v1/get_user_mapping
 ```
 
 #### Note:  
