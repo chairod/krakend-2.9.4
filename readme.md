@@ -19,6 +19,11 @@ cd springboot/services
 docker-compose up
 ```
 
+> หลังรันเสร็จแล้วให้เปิด Browser เพื่อทดสอบ  
+```
+http://localhost:8080/api/v1/get_user_with_array
+```
+
 #### Note:  
 > A. __-v .:/etc/krakend__  หมายถึง ต้องการจะ Binding Volumn ในตำแหน่ง Folder ปัจจุบันเข้าไปที่ /etc/krakend ซึ่งเป็น Default Directory ที่ Krakend จะเข้าไปอ่าน Configuration file  
 > B. ถ้าต้องการรันแบบ Background ให้เติม Argument __-d__ นี้เข้าไป  
