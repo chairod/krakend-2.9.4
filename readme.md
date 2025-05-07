@@ -5,11 +5,21 @@ A. Pull commercial krakend image จาก dockerhub
 docker pull krakend:2.9.4  
 ```
 B. รัน Krakend จาก Image ที่ Pull จาก dockerhub ในข้อ A <font color="red">ก่อนจะใช้งาน Gateway ได้ ให้รัน docker compose ในขั้นตอน **โครงสร้างของโครงการ > ข้อ D ด้วย**</font>  
+> แก้ไข IP Address ที่อยู่ในไฟล์ **configs/krakend/krakend.json**
+ 1. ให้หา IP Address ของเครื่อง ณ ปัจจุบันก่อน ซึ่งจากภาพด้านล่าง NB ที่ทดสอบต่อกับ WIFI จึงได้ IP **192.168.1140**
+    ![image](https://github.com/user-attachments/assets/f3b91b92-4a40-4099-8743-4d7dd5bdace1)
+ 2. ให้นำ IP **192.168.1.140** ไปแทนที่ในไฟล์ **configs/krakend/krakend.json**  (ให้แทนที่เฉพาะ **192.168.1.21** ในส่วนของ Port ให้คงไว้ตามเดิม)
+    ![image](https://github.com/user-attachments/assets/16afb9aa-e188-465f-b580-0bb0971eae65)
+ Note: ถ้ามีการเปลี่ยนแปลง Port จาก 8001, 8002, 8003 ให้เป็น Port อื่นๆจะทำให้ Krakend ไม่สามารถต่อไปกับ backend service ได้, หรือหากต้องการเปลี่ยนจริงๆ ให้เข้าไปแก้ไขไฟล์ **springboot/services/docker-compose.yml**
+![image](https://github.com/user-attachments/assets/ae9f5119-6af1-4584-a911-c9f9326a1b00)
+
+
+
 > เปลี่ยนตำแหน่ง Current Directory ไปอยู่ที่  **configs/krakend**  
 ```
 cd configs/krakend
 ```
-> รันคำสั่งด้านล่างนี้เพื่อเปิด Krakend API Gateway  
+> รันคำสั่งด้านล่างนี้เพื่อเปิด Krakend API Gateway
 ```
 docker run --rm -p 8080:8080 --name docker-commu -v .:/etc/krakend krakend:2.9.4 run --config /etc/krakend/krakend.json
 ```
