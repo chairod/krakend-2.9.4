@@ -1,5 +1,6 @@
 {
   "$schema": "https://www.krakend.io/schema/krakend.json",
+  "@comment": "Disabled Cors",
   "version": 3,
   "name": "Krakend playground",
   "timeout": "3000ms",
@@ -21,7 +22,7 @@
   },
   "endpoints": [
     {
-      "@comment": "เปิดใช้งาน Cors เฉพาะ Endpoint",
+      "@comment": "",
       "endpoint": "/api/v1/allow_disable_cors",
       "method": "GET",
       "output_encoding": "json",

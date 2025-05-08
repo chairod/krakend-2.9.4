@@ -70,7 +70,6 @@
   },
   "endpoints": [
     {
-      "@comment": "เปิดใช้งาน Cors เฉพาะ Endpoint",
       "endpoint": "/api/v1/allow_cors",
       "method": "GET",
       "output_encoding": "json",
