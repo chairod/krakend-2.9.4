@@ -1,6 +1,6 @@
 ### Prov Krakend Step  
 ในโครงการนี้จะเป็นการ Prov การทำงานของ Krakend สามารถรองรับการทำงานในหัวข้อต่างๆได้หรือไม่ โดยแบ่งออกเป็นหัวข้อดังนี้   
-1. CORS (Cross Original Resource Sharing)  เป็นการ Allow ให้สามารถเข้าถึง API Gateway ได้จากเครื่องอื่นๆ ซึ่ง Modern browser ปัจจุบันป้องกันเรื่องนี้เอาไว้  
+1. CORS (Cross Origin Resource Sharing)  เป็นการ Allow ให้สามารถเข้าถึง API Gateway ได้จากเครื่องอื่นๆ ซึ่ง Modern browser ปัจจุบันป้องกันเรื่องนี้เอาไว้  
 2. ป้องกันในด้าน Security  
     2.1 DDOS  
     2.2 Rate limit
