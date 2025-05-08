@@ -65,7 +65,7 @@ Jmeter
 
 
 
-## Trafic Management
+## Trafic Management Section
  **Load Balance**  
  เปิด Web Browser แล้วนำลิ้งต่อไปนี้ไปวาง และให้กด F5 ย้ำไปเรื่อยๆ และตรวจสอบตรงค่า  **dockerName** จะเปลี่ยนแปลงไปจากการใช้ Round-Robin Stategy
 ```
