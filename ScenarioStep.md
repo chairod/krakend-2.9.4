@@ -42,7 +42,7 @@ docker-compose up
 > Spring Boot Dashboard    
 > Spring Initializr Java Support  
 
-## Seucirity Section
+## Security Section
   **CORs (Cross Original Resource Sharing)**  
   Script ในการทดสอบ CORs ของ Krakend อยู่ภายใน Folder **demoClientApp** ให้คลิกขวาที่ไฟล์ index.html แล้วเลือก **Open with Live Server** จะเปิดหน้าต่าง Web Browser ขึ้นมา  
   ![image](https://github.com/user-attachments/assets/9c9ecb2a-379b-4982-886c-148e53a820ae)
