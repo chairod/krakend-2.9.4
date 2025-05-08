@@ -31,7 +31,7 @@ Clone โครงการนี้ลงไปที่เครื่อง�
 ```
 git clone https://github.com/chairod/krakend-2.9.4.git
 ```  
-สั่งเปิด Krakend API Service  
+สั่งเปิด Krakend API Service (จะต้องเปิด Docker Desktop ขึ้นมาก่อน)  
 ```
 cd krakend-playground
 docker-compose up
