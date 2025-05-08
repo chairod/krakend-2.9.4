@@ -37,11 +37,10 @@ cd krakend-playground
 docker-compose up
 ```
 ให้เปิดโครงการนี้ด้วย Visual Studio Code เพื่อทำการทดสอบ และจะต้อง Install Extension ดังนี้  
-> Live Server
-> spring Boot tools
-> Spring Boot Dashboard  
+> Live Server  
+> spring Boot tools  
+> Spring Boot Dashboard    
 > Spring Initializr Java Support  
-
 
 ## Seucirity Section
   **CORs (Cross Original Resource Sharing)**  
@@ -75,7 +74,28 @@ http://localhost:8080/api/v1/load_balance_round_robin
 
 **Circuit Breaker**
 เพื่อป้องกันไม่ให้ Backend ทำงานหนักจนเกินไป ซึ่งกำหนดค่าไว้คือ  
-หากมีข้อผิดพลาดเกิดขึ้นจำนวน 5 ครั้งภายใน 10 วินาทีให้ krakend ไม่ต้องไปเรียก Backend
+![image](https://github.com/user-attachments/assets/97efc412-6114-4187-b7ef-124d6ecbacc3)
+
+หากมีข้อผิดพลาดเกิดขึ้นจำนวน 5 ครั้งภายใน 10 วินาทีให้ krakend ไม่ต้องไปเรียก Backend  
+และกำหนดระยะเวลาที่ Krakend จะทดสอบข้อมูลอีกครั้งในอีก 5 วินาที  
+![image](https://github.com/user-attachments/assets/0e371ff2-065d-4ff5-80dc-2a000595b82d)  
+
+จะใช้ JMeter ในการทดสอบให้เปิด Command-Line แล้วพิมพ์คำสั่งด้านล่าง  
+```
+JMeter
+```
+เลือกไฟล์ **jmeter-concurrency.jmx**  
+จะเห็นว่ามีบางช่วงเวลาที่ API ตอบกลับทั้ง 200 - OK และ 500 - Internal Server Error
+![image](https://github.com/user-attachments/assets/381f9058-1c4c-4124-856e-c4ae50a505be)  
+เปอร์เซ็นต์ Error จะอยู่ที่ 24%
+![image](https://github.com/user-attachments/assets/cb02e842-fa1e-4cef-b84f-806db9b438a2)  
+
+หลังจากใช้ Jmeter ยิงจะเห็นว่ามีการเปิด Circuit break  
+![image](https://github.com/user-attachments/assets/d3b04728-bda6-4a9a-87b5-9264c6d0b535)
+
+
+
+
 
   
 
