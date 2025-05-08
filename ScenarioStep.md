@@ -49,5 +49,5 @@ docker-compose up
   Script ในการทดสอบ CORs ของ Krakend อยู่ภายใน Folder **demoClientApp** ให้คลิกขวาที่ไฟล์ index.html แล้วเลือก **Open with Live Server** จะเปิดหน้าต่าง Web Browser ขึ้นมา  
   
 
-  **DDOS & Rate Limit**
+  **DDOS & Rate Limit**  
   
