@@ -10,18 +10,18 @@
 
 
 ### ก่อนเริ่มใช้งานโครงการนี้ให้ทำตามขั้นตอนดังต่อไปนี้   
-**ก่อนเริ่มต้องเตรียมเครื่องมือดังนี้**  
+**เตรียมเครื่องมือดังนี้**  
 1. Docker Desktop   
 2. Visual Studio Code  
 3. Apache JMeter (ใช้ในการรันทดสอบ Concurrent)  
 4. Git ใช้ในการ Clone Project ลงที่เครื่อง
 
-#### หลังจากที่ได้เตรียมเครื่องมือ 2 ข้อด้านบนแล้ว ให้ทำตามขั้นตอนต่อไปนี้   
-A. โครงการนี้จะใช้ Docker Image ที่เป็น Community เนื่องจากว่า Enterpise จะต้องมี License file ในการ Activate เพื่อเข้าใช้งาน   
+#### หลังจากที่ได้เตรียมเครื่องมือตามข้อด้านบนแล้ว ให้ทำตามขั้นตอนต่อไปนี้   
+A. โครงการนี้จะใช้ Krakend Image ที่เป็น Community เนื่องจากว่า Enterpise จะต้องมี License file ในการ Activate เพื่อเข้าใช้งาน   
 ```
 docker pull krakend:2.9.4  
 ```  
-B. ก่อนการรันให้ทราบโครงสร้างเบื้องต้นของ โครงการที่ทำเอาไว้เพื่อ Prov หัวข้อด้านบนก่อน  ซึ่งประกอบไปด้วย   
+B. โครงสร้างเบื้องต้นของ โครงการที่ทำเอาไว้เพื่อ Prov แต่ละหัวข้อก่อนหน้า  ซึ่งประกอบไปด้วย   
  1. ใช้ Krakend Community เวอร์ชั่น 2.9.4  
  2. ทำ Service อย่างง่ายด้วย SpringBoot รันด้วย JDK 21 (ไม่มีการเชื่อมกับฐานข้อมูล)  
 
@@ -62,7 +62,20 @@ Jmeter
 
 ยิงทดสอบ 200 Request/1 วินาที ตอบ 503-Service Unavailable มาจำนวน 68 ครั้ง คิดเป็น 34%
 ![image](https://github.com/user-attachments/assets/5b88a14a-7ca2-4071-9623-573c8e865866)  
-![image](https://github.com/user-attachments/assets/36de866d-0932-427f-806a-f4c8f7a93a98)
+![image](https://github.com/user-attachments/assets/36de866d-0932-427f-806a-f4c8f7a93a98)  
+
+
+
+## Trafic Management
+ **Load Balance**  
+ เปิด Web Browser แล้วนำลิ้งต่อไปนี้ไปวาง และให้กด F5 ย้ำไปเรื่อยๆ และตรวจสอบตรงค่า  **dockerName** จะเปลี่ยนแปลงไปจากการใช้ Round-Robin Stategy
+```
+http://localhost:8080/api/v1/load_balance_round_robin
+```
+
+**Circuit Breaker**
+เพื่อป้องกันไม่ให้ Backend ทำงานหนักจนเกินไป ซึ่งกำหนดค่าไว้คือ  
+หากมีข้อผิดพลาดเกิดขึ้นจำนวน 5 ครั้งภายใน 10 วินาทีให้ krakend ไม่ต้องไปเรียก Backend
 
   
 
