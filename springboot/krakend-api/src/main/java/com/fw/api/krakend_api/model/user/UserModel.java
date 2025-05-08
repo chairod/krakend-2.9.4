@@ -14,4 +14,7 @@ public class UserModel implements iServiceModel {
 
     @Getter @Setter
     private String citizenId;
+
+    @Getter @Setter
+    private String DockerName;
 }

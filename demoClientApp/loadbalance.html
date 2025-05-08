@@ -1,0 +1,105 @@
+<html>
+    <head>
+        <title>Client Application, Call Krakend Service</title>
+        <style>
+            button{
+                display:inline-block;
+                margin:10px;
+                padding: 10px;
+                box-shadow: 0px 0px 10px black;
+            }
+            button:nth-child(1){
+                margin-left: 0px!important;
+            }
+
+            div#logger{
+                padding:0px;
+            }
+            div#logger > div{
+                margin-bottom: 2px;
+                border: solid 1px #000;
+                padding-bottom: 2px;
+            }
+            div#logger > div > label{
+                font-weight:bold;
+                margin-right: 20px;
+                color:blue;
+            }
+        </style>
+    </head>
+    <body>
+        <h1 style="border-bottom:solid 2px black;padding-bottom:2px;">Client App Call krakend Load balance Round Robin Stategy</span></h1>
+        <div>
+            <button id="btn">กดปุ่มนี้ย้ำไปเรื่อยๆ และสังเกตผลลัพธ์ "dockerName":</button>
+            <div id="output"></div>
+        </div>
+        <div id="logger"></div>
+        <script type="text/javascript">
+            var loggerEl = null;
+            //var progressiveTimeEl = null;
+            window.onload = () => {
+                loggerEl = document.getElementById('output');
+                //progressiveTimeEl = document.getElementById('progressiveTime');
+                document.getElementsByTagName('button')[0].addEventListener('click', () => fn_call_api('/api/v1/load_balance_round_robin', '8080', 'get'));
+            };
+
+            const fn_write_log = message => {
+                const div = document.createElement('div');
+                const label = document.createElement('label');
+                const span = document.createElement('span');
+
+                label.innerHTML = `[${new Date().toLocaleString()}] DEBUG - `;
+                span.innerHTML = message;
+
+                div.appendChild(label);
+                div.appendChild(span);
+                loggerEl.appendChild(div);
+            }
+
+
+            // var timeoutTrigger = 10;
+            // var isNextCount = true;
+            // setInterval(async () => {
+            //     if(!isNextCount) {
+            //         progressiveTimeEl.innerHTML = '<span class="text-danger">Calling API And waiting response';
+            //         return;
+            //     }
+                
+            //     progressiveTimeEl.innerHTML = `Cnt. down time: ${timeoutTrigger} Second(s).`;
+            //     if(--timeoutTrigger <= 0){
+            //         for(var ix=1;ix<=10;ix++)
+            //             await fn_call_api('/api/v1/load_balance_round_robin', '8080', 'get');
+            //         isNextCount = false;
+            //         timeoutTrigger = 10;
+            //     }
+            // }, 1000);
+
+
+            const fn_call_api = (_endpoint, port, _method) => {
+                return new Promise(resolve => {
+                    fetch(`http://localhost:8080/api/v1/load_balance_round_robin`, {
+                        method: _method,
+                        mode: 'cors',
+                        headers:{
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                    .then(response => {
+                        fn_write_log(`Calling api endpoint: <strong>${_endpoint}</strong>`);
+                        return response.json();
+                    })
+                    .then(data => {
+                        resolve();
+
+                        var resText = JSON.stringify(data);
+                        resText = resText.replace(/(:?"dockerName":"(.+?)")/ig, '<span style="color:red">$1</span>');
+                        fn_write_log(`Calling api endpoint: <strong>${resText}</strong>`);
+                    }).catch(error => {
+                        resolve();
+                        fn_write_log(`<strong>${error}</strong>`);
+                    });
+                });
+            };
+        </script>
+    </body>
+</html>

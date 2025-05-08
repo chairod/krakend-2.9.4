@@ -32,9 +32,8 @@
         <div><strong>Note:&nbsp;</strong>การเรียก Krakend จะต้องมีการเปิด Cors (Cross Origin resource sharing) เนื่องจาก Browser จะ Block หากมีการเรียก API ข้าม Domain, Krakend Domain: <span style="color:red;">http://localhost:8088</span></div>
         
         <div>
-            <button id="btn" data-endpoint="api/v1/get_user_with_array" data-method="get">โหลด User ได้รับ collection (Default ของ Krakend)</button>
-            <button id="btn" data-endpoint="api/v1/get_user_mapping" data-method="get">โหลด User เปลี่ยน Key = Users</button>
-            <button id="btn" data-endpoint="api/v1/get_user_deny" data-method="get">โหลด User ลบ CitizenId ออก</button>
+            <button id="btn" data-endpoint="api/v1/allow_cors" data-port="8080" data-method="get">โหลด User - Allow Cors</button>
+            <button id="btn" data-endpoint="api/v1/allow_disable_cors" data-port="8085" data-method="get">โหลด User - Disable Cors</button>
         </div>
         <div id="logger"></div>
         <script type="text/javascript">
@@ -46,7 +45,7 @@
                 for(var ix=0;ix<buttons.length;ix++)
                     buttons[ix].addEventListener('click', evt => {
                         //console.log(evt.target.getAttribute('data-method'));
-                        fn_call_api(evt.target.getAttribute('data-endpoint'), evt.target.getAttribute('data-method'));
+                        fn_call_api(evt.target.getAttribute('data-endpoint'), evt.target.getAttribute('data-port'), evt.target.getAttribute('data-method'));
                     });
             };
 
@@ -63,8 +62,8 @@
                 loggerEl.appendChild(div);
             }
 
-            const fn_call_api = (_endpoint, _method) => {
-                fetch(`http://localhost:8080/${_endpoint}`, {
+            const fn_call_api = (_endpoint, port, _method) => {
+                fetch(`http://localhost:${port}/${_endpoint}`, {
                     method: _method,
                     mode: 'cors',
                     headers:{

@@ -1,0 +1,15 @@
+global:
+  scrape_interval: 15s
+  external_labels:
+    monitor: krakend_monitor
+
+
+scrape_configs:
+  - job_name: krakend_scrapper
+    scrape_interval: 5s
+    metrics_path: '/metrics'
+    static_configs:
+      - targets:
+        - 'krakend-2.9.4:9091'
+        labels:
+          app: krakend-community

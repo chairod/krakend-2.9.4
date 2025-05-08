@@ -1,0 +1,43 @@
+{
+  "$schema": "https://www.krakend.io/schema/krakend.json",
+  "version": 3,
+  "name": "Krakend playground",
+  "timeout": "3000ms",
+  "cache_ttl": "300s",
+  "output_encoding": "json",
+  "port": 8085,
+  "debug_endpoint": true,
+  "echo_endpoint": true,
+  "extra_config": {
+    "telemetry/metrics": {
+      "@comment": "เป็นการเปิดใช้งาน Metrics API ที่รันใช้งานคนละ Port กับ Krakend ซึ่งใช้ร่วมกับ InfluDB",
+      "backend_disabled": false,
+      "collection_time": "60s",
+      "endpoint_disabled": false,
+      "listen_address": ":8090",
+      "router_disabled": false,
+      "proxy_disabled": false
+    }
+  },
+  "endpoints": [
+    {
+      "@comment": "เปิดใช้งาน Cors เฉพาะ Endpoint",
+      "endpoint": "/api/v1/allow_disable_cors",
+      "method": "GET",
+      "output_encoding": "json",
+      "backend": [
+        {
+          "url_pattern": "/api/v1/user/getAll",
+          "method": "GET",
+          "sd": "static",
+          "disable_host_sanitize": false,
+          "encoding": "json",
+          "is_collection": true,
+          "host": [
+            "http://backend-api-s1:8003"
+          ]
+        }
+      ]
+    }
+  ]
+}

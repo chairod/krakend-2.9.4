@@ -4,6 +4,8 @@ services:
     image: openjdk:21-slim
     volumes:
       - ./jar:/service/api
+    environment:
+      - DOCKER_HOST_NAME=backend_api_s1
     ports:
       - 8001:8003
     command: ["java", "-jar", "/service/api/krakend-api-0.0.1.jar"]
@@ -16,6 +18,8 @@ services:
       - ./jar:/service/api
     ports:
       - 8002:8003
+    environment:
+      - DOCKER_HOST_NAME=backend_api_s2
     command: ["java", "-jar", "/service/api/krakend-api-0.0.1.jar"]
 
 
@@ -26,4 +30,6 @@ services:
       - ./jar:/service/api
     ports:
       - 8003:8003
+    environment:
+      - DOCKER_HOST_NAME=backend_api_s3
     command: ["java", "-jar", "/service/api/krakend-api-0.0.1.jar"]

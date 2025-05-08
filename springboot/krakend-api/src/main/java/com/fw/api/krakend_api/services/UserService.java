@@ -19,7 +19,6 @@ import java.util.stream.Collectors;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @RequestMapping("/api/v1/user")
@@ -44,13 +43,14 @@ public class UserService {
 
     @GetMapping(value = { "getAll/{prefix}", "getAll" }, produces = MediaType.APPLICATION_JSON)
     public @ResponseBody List<UserModel> getUsers(@PathVariable(name = "prefix", required = false) String prefix) {
-
+        final String dockerHost = System.getenv("DOCKER_HOST_NAME");
         List<UserModel> users = new ArrayList<UserModel>();
         for (int ix = 0; ix < 10; ix++) {
             UserModel usrModel = new UserModel();
             usrModel.setUserId(ix);
             usrModel.setUserName(String.format("%sUserName %s", prefix == null ? "" : prefix, ix));
             usrModel.setCitizenId(UUID.randomUUID().toString());
+            usrModel.setDockerName(dockerHost);
             users.add(usrModel);
         }
 
@@ -64,12 +64,15 @@ public class UserService {
         if (isThrowError)
             throw new Exception("Test Circuit break");
 
+
+        final String dockerHost = System.getenv("DOCKER_HOST_NAME");
         List<UserModel> users = new ArrayList<UserModel>();
         for (int ix = 0; ix < 10; ix++) {
             UserModel usrModel = new UserModel();
             usrModel.setUserId(ix);
             usrModel.setUserName(String.format("%sUserName %s", prefix == null ? "" : prefix, ix));
             usrModel.setCitizenId(UUID.randomUUID().toString());
+            usrModel.setDockerName(dockerHost);
             users.add(usrModel);
         }
 
