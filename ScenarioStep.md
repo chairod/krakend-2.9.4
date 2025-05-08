@@ -5,9 +5,8 @@
     2.1 DDOS  
     2.2 Rate limit
 3. Traffic Management   
-  3.1 Rate Limit  
-  3.2 Load Balance  
-  3.3 Circuit Breaker   
+  3.1 Load Balance  
+  3.2 Circuit Breaker   
 
 
 ### ก่อนเริ่มใช้งานโครงการนี้ให้ทำตามขั้นตอนดังต่อไปนี้   
@@ -47,7 +46,24 @@ docker-compose up
 ## Seucirity Section
   **CORs (Cross Original Resource Sharing)**  
   Script ในการทดสอบ CORs ของ Krakend อยู่ภายใน Folder **demoClientApp** ให้คลิกขวาที่ไฟล์ index.html แล้วเลือก **Open with Live Server** จะเปิดหน้าต่าง Web Browser ขึ้นมา  
+  ![image](https://github.com/user-attachments/assets/9c9ecb2a-379b-4982-886c-148e53a820ae)
+
+
+  **DDOS & Rate Limit**  
+  กำหนดจำนวน Request สูงสุดที่สามารถรับโหลดได้ในช่วงเวลาหนึ่ง เช่น ใน 1 วินาทีจะรับจำนวนคำขอสูงสุดที่ 100 คำขอ เป็นต้น  
+จะใช้เครื่องมือ JMeter ในการทดสอบ  
+ให้ดาวน์โหลด Apache JMeter https://dlcdn.apache.org//jmeter/binaries/apache-jmeter-5.6.3.zip  และทำกำหนด Environment Varibile ชี้มายังพาร์ท Bin  
+![image](https://github.com/user-attachments/assets/b0544a70-a038-439a-8a45-2dddf344f61f)  
+พิมพ์คำสั่งเพื่อเปิด Jmeter (เปิด Window Command line)   
+```
+Jmeter
+```  
+ให้เลือกไฟล์ **jmeter-concurrency.jmx** เข้าไปในโปรแกรม Jmeter  
+
+ยิงทดสอบ 200 Request/1 วินาที ตอบ 503-Service Unavailable มาจำนวน 68 ครั้ง คิดเป็น 34%
+![image](https://github.com/user-attachments/assets/5b88a14a-7ca2-4071-9623-573c8e865866)  
+![image](https://github.com/user-attachments/assets/36de866d-0932-427f-806a-f4c8f7a93a98)
+
   
 
-  **DDOS & Rate Limit**
-  
+
