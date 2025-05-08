@@ -72,13 +72,13 @@ Jmeter
 http://localhost:8080/api/v1/load_balance_round_robin
 ```
 
-**Circuit Breaker**
+**Circuit Breaker**  
 เพื่อป้องกันไม่ให้ Backend ทำงานหนักจนเกินไป ซึ่งกำหนดค่าไว้คือ  
-![image](https://github.com/user-attachments/assets/97efc412-6114-4187-b7ef-124d6ecbacc3)
+![image](https://github.com/user-attachments/assets/0e371ff2-065d-4ff5-80dc-2a000595b82d)  
 
 หากมีข้อผิดพลาดเกิดขึ้นจำนวน 5 ครั้งภายใน 10 วินาทีให้ krakend ไม่ต้องไปเรียก Backend  
 และกำหนดระยะเวลาที่ Krakend จะทดสอบข้อมูลอีกครั้งในอีก 5 วินาที  
-![image](https://github.com/user-attachments/assets/0e371ff2-065d-4ff5-80dc-2a000595b82d)  
+![image](https://github.com/user-attachments/assets/97efc412-6114-4187-b7ef-124d6ecbacc3)
 
 จะใช้ JMeter ในการทดสอบให้เปิด Command-Line แล้วพิมพ์คำสั่งด้านล่าง  
 ```
