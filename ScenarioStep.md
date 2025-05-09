@@ -76,7 +76,7 @@ http://localhost:8080/api/v1/load_balance_round_robin
 เพื่อป้องกันไม่ให้ Backend ทำงานหนักจนเกินไป ซึ่งค่ากำหนดไว้คือ  
 ![image](https://github.com/user-attachments/assets/0e371ff2-065d-4ff5-80dc-2a000595b82d)  
 
-**คำอธิบาย:** หากมีข้อผิดพลาดเกิดขึ้นจำนวน 5 ครั้งภายใน 10 วินาทีใ krakend จะเปิด Circuit Break เพื่อหยุดการเรียก Backend พร้อมตอบกลับ 500 - Internal Server Error 
+**คำอธิบาย:** หากมีข้อผิดพลาดเกิดขึ้นจำนวน 5 ครั้งภายใน 10 วินาที krakend จะเปิด Circuit Break เพื่อหยุดการเรียก Backend พร้อมตอบกลับ 500 - Internal Server Error 
 และกำหนดระยะเวลาที่ Krakend จะทดสอบนับจำนวน Error ที่เกิดขึ้นอีกครั้งในอีก 5 วินาที  
 ![image](https://github.com/user-attachments/assets/97efc412-6114-4187-b7ef-124d6ecbacc3)
 
