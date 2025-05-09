@@ -51,7 +51,7 @@ docker-compose up
   **DDOS & Rate Limit**  
   กำหนดจำนวน Request สูงสุดที่สามารถรับโหลดได้ในช่วงเวลาหนึ่ง เช่น ใน 1 วินาทีจะรับจำนวนคำขอสูงสุดที่ 100 คำขอ เป็นต้น  
 จะใช้เครื่องมือ JMeter ในการทดสอบ  
-ให้ดาวน์โหลด Apache JMeter https://dlcdn.apache.org//jmeter/binaries/apache-jmeter-5.6.3.zip  และทำกำหนด Environment Varibile ชี้มายังพาร์ท Bin  
+ให้ดาวน์โหลด Apache JMeter https://dlcdn.apache.org//jmeter/binaries/apache-jmeter-5.6.3.zip  และกำหนด Environment Variable ชี้มายังพาร์ท Bin  
 ![image](https://github.com/user-attachments/assets/b0544a70-a038-439a-8a45-2dddf344f61f)  
 พิมพ์คำสั่งเพื่อเปิด Jmeter (เปิด Window Command line)   
 ```
@@ -67,17 +67,17 @@ Jmeter
 
 ## Trafic Management Section
  **Load Balance**  
- เปิด Web Browser แล้วนำลิ้งต่อไปนี้ไปวาง และให้กด F5 ย้ำไปเรื่อยๆ และตรวจสอบตรงค่า  **dockerName** จะเปลี่ยนแปลงไปจากการใช้ Round-Robin Stategy
+ เปิด Web Browser แล้วนำลิ้งต่อไปนี้ไปวาง และให้กด F5 ย้ำไปเรื่อยๆ และตรวจสอบตรงค่า  **dockerName** ค่าที่ตอบกลับมาจะเปลี่ยนแปลงไป เนื่องจากการใช้ Round-Robin Strategy
 ```
 http://localhost:8080/api/v1/load_balance_round_robin
 ```
 
 **Circuit Breaker**  
-เพื่อป้องกันไม่ให้ Backend ทำงานหนักจนเกินไป ซึ่งกำหนดค่าไว้คือ  
+เพื่อป้องกันไม่ให้ Backend ทำงานหนักจนเกินไป ซึ่งค่ากำหนดไว้คือ  
 ![image](https://github.com/user-attachments/assets/0e371ff2-065d-4ff5-80dc-2a000595b82d)  
 
-หากมีข้อผิดพลาดเกิดขึ้นจำนวน 5 ครั้งภายใน 10 วินาทีให้ krakend ไม่ต้องไปเรียก Backend  
-และกำหนดระยะเวลาที่ Krakend จะทดสอบข้อมูลอีกครั้งในอีก 5 วินาที  
+**คำอธิบาย:** หากมีข้อผิดพลาดเกิดขึ้นจำนวน 5 ครั้งภายใน 10 วินาทีใ krakend จะเปิด Circuit Break เพื่อหยุดการเรียก Backend พร้อมตอบกลับ 500 - Internal Server Error 
+และกำหนดระยะเวลาที่ Krakend จะทดสอบนับจำนวน Error ที่เกิดขึ้นอีกครั้งในอีก 5 วินาที  
 ![image](https://github.com/user-attachments/assets/97efc412-6114-4187-b7ef-124d6ecbacc3)
 
 จะใช้ JMeter ในการทดสอบให้เปิด Command-Line แล้วพิมพ์คำสั่งด้านล่าง  
