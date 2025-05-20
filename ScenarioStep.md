@@ -1,4 +1,4 @@
-### Prov Krakend Step  
+![image](https://github.com/user-attachments/assets/119a9034-ec37-486e-883e-10499f8da927)### Prov Krakend Step  
 ในโครงการนี้จะเป็นการ Prov การทำงานของ Krakend สามารถรองรับการทำงานในหัวข้อต่างๆได้หรือไม่ โดยแบ่งออกเป็นหัวข้อดังนี้   
 1. CORS (Cross Origin Resource Sharing)  เป็นการ Allow ให้สามารถเข้าถึง API Gateway ได้จากเครื่องอื่นๆ ซึ่ง Modern browser ปัจจุบันป้องกันเรื่องนี้เอาไว้  
 2. ป้องกันในด้าน Security  
@@ -6,7 +6,8 @@
     2.2 Rate limit
 3. Traffic Management   
   3.1 Load Balance  
-  3.2 Circuit Breaker   
+  3.2 Circuit Breaker
+  3.3 Cluster
 
 
 ### ก่อนเริ่มใช้งานโครงการนี้ให้ทำตามขั้นตอนดังต่อไปนี้   
@@ -91,7 +92,21 @@ JMeter
 ![image](https://github.com/user-attachments/assets/cb02e842-fa1e-4cef-b84f-806db9b438a2)  
 
 หลังจากใช้ Jmeter ยิงจะเห็นว่ามีการเปิด Circuit break  
-![image](https://github.com/user-attachments/assets/d3b04728-bda6-4a9a-87b5-9264c6d0b535)
+![image](https://github.com/user-attachments/assets/d3b04728-bda6-4a9a-87b5-9264c6d0b535)   
+
+
+**การทำ Cluster**  
+การรัน Cluster ของ Krakend ไม่มีความจำเป็นต้องลง Software ใดๆเพิ่มเติม ซึ่งใช้หลักการเพียง 2 ข้อ ได้แก่  
+1. มี Font-End Load balance ซึ่งจากตัวอย่างนี้จะใช้ nginx ในการทำ Load balance ที่อยู่ส่วนหน้า  
+2. ในแต่ละ Instance ของ Krakend ให้รัน Configuration file เดียวกัน
+```
+http://localhost:8998/api/v1/cluster
+```
+เข้าลิ้งด้านบนแล้วกด F5 ไปเรื่อยๆค่า **krakendNode** จะเปลี่ยนแปลงไปทุกครั้งที่มีการ Refresh  
+![image](https://github.com/user-attachments/assets/cb820a0a-f83c-4cba-b46a-897b831287d9)  
+![image](https://github.com/user-attachments/assets/3060efc8-4c43-47ac-bfd0-ab639f7f0e4b)  
+
+
 
 
 
