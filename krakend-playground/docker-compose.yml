@@ -2,7 +2,7 @@ services:
 
   # Note: จะต้องกำหนด ชื่อ Service ต้องไม่มี Underscore (_) เพราะจะมีผลกับการ Mapping Host Name ด้วยชื่อ Service ของ SpringBoot
   backend-api-s1: 
-    container_name: "SpringBackendService1"
+    container_name: "springboot-api-s1"
     image: openjdk:21-slim
     volumes:
       - ../springboot/services/jar:/service/api
@@ -19,7 +19,7 @@ services:
 
   # Note: จะต้องกำหนด ชื่อ Service ต้องไม่มี Underscore (_) เพราะจะมีผลกับการ Mapping Host Name ด้วยชื่อ Service ของ SpringBoot
   backend-api-s2:
-    container_name: "SpringBackendService2"
+    container_name: "springboot-api-s2"
     image: openjdk:21-slim
     volumes:
       - ../springboot/services/jar:/service/api
@@ -36,7 +36,7 @@ services:
 
   # Note: จะต้องกำหนด ชื่อ Service ต้องไม่มี Underscore (_) เพราะจะมีผลกับการ Mapping Host Name ด้วยชื่อ Service ของ SpringBoot
   backend-api-s3:
-    container_name: "SpringBackendService3"
+    container_name: "springboot-api-s3"
     image: openjdk:21-slim
     volumes:
       - ../springboot/services/jar:/service/api
@@ -52,21 +52,26 @@ services:
       - krakend-network
 
 
-  krakend:
-    container_name: "krakend-2.9.4"
-    image: krakend:2.9.4
+  krakend-node1:
+    container_name: "krakend-2.9.4-node1"
+    #image: krakend:2.9.4
+    build: .
     volumes:
       - ../configs/krakend:/etc/krakend
     ports:
       # Port ของ krakend api gateway, http://localhost:8080/api/v1/
       - "8080:8080"
 
-      # Port ของ Matrics API ที่ Export ข้อมูล Metrics เพื่อไปเก็บไว้ใน InfluxDB, http://localhost:8090/__stats
-      # Config จะอยู่ใน ./configs/krakend/krakend.json {"elemetry/metrics": {"telemetry/metrics": {...}}}
-      - "8090:8090"
+      # # Port ของ Matrics API ที่ Export ข้อมูล Metrics เพื่อไปเก็บไว้ใน InfluxDB, http://localhost:8090/__stats
+      # # Config จะอยู่ใน ./configs/krakend/krakend.json {"elemetry/metrics": {"telemetry/metrics": {...}}}
+      # - "8090:8090"
 
-      - "9091:9091"
-    command: ["run", "-d", "-c", "/etc/krakend/krakend.json"]
+      # - "9091:9091"
+    environment:
+      - KRAKEND_NODE=krakend-node1
+    # command: ["run", "-d", "-c", "/etc/krakend/krakend.json"]
+    # Compile krakend template เพื่อแทนที่ Environment variable ของ Container เข้าไปใน krakend.json
+    command: /bin/sh -c "envsubst < /etc/krakend/krakend.tmpl.json > /etc/krakend/krakend.compile.json && krakend run -c /etc/krakend/krakend.compile.json"
     networks:
       - krakend-network
     depends_on:
@@ -74,6 +79,64 @@ services:
       - backend-api-s2
       - backend-api-s3
 
+  krakend-node2:
+    container_name: "krakend-2.9.4-node2"
+    #image: krakend:2.9.4
+    build: .
+    volumes:
+      - ../configs/krakend:/etc/krakend
+    ports:
+      # Port ของ krakend api gateway, http://localhost:8081/api/v1/
+      - "8081:8080"
+
+      # # Port ของ Matrics API ที่ Export ข้อมูล Metrics เพื่อไปเก็บไว้ใน InfluxDB, http://localhost:8090/__stats
+      # # Config จะอยู่ใน ./configs/krakend/krakend.json {"elemetry/metrics": {"telemetry/metrics": {...}}}
+      # - "8090:8090"
+
+      # - "9091:9091"
+    environment:
+      - KRAKEND_NODE=krakend-node2
+    # command: ["run", "-d", "-c", "/etc/krakend/krakend.json"]
+    # Compile krakend template เพื่อแทนที่ Environment variable ของ Container เข้าไปใน krakend.json
+    command: /bin/sh -c "envsubst < /etc/krakend/krakend.tmpl.json > /etc/krakend/krakend.compile.json && krakend run -c /etc/krakend/krakend.compile.json"
+    networks:
+      - krakend-network
+    depends_on:
+      - backend-api-s1
+      - backend-api-s2
+      - backend-api-s3
+
+  krakend-node3:
+    container_name: "krakend-2.9.4-node3"
+    #image: krakend:2.9.4
+    build: .
+    volumes:
+      - ../configs/krakend:/etc/krakend
+    ports:
+      # Port ของ krakend api gateway, http://localhost:8082/api/v1/
+      - "8082:8080"
+
+      # # Port ของ Matrics API ที่ Export ข้อมูล Metrics เพื่อไปเก็บไว้ใน InfluxDB, http://localhost:8090/__stats
+      # # Config จะอยู่ใน ./configs/krakend/krakend.json {"elemetry/metrics": {"telemetry/metrics": {...}}}
+      # - "8090:8090"
+
+      # - "9091:9091"
+    environment:
+      - KRAKEND_NODE=krakend-node3
+    # command: ["run", "-d", "-c", "/etc/krakend/krakend.json"]
+    # Compile krakend template เพื่อแทนที่ Environment variable ของ Container เข้าไปใน krakend.json
+    command: /bin/sh -c "envsubst < /etc/krakend/krakend.tmpl.json > /etc/krakend/krakend.compile.json && krakend run -c /etc/krakend/krakend.compile.json"
+    networks:
+      - krakend-network
+    depends_on:
+      - backend-api-s1
+      - backend-api-s2
+      - backend-api-s3
+
+  
+  ## Krakend ที่ไม่เปิด Cors
+  ##
+  ##
   krakend-nocors:
     container_name: "KrakendDisableCors"
     image: krakend:2.9.4
@@ -89,6 +152,22 @@ services:
       - backend-api-s2
       - backend-api-s3
   
+
+
+  ## Krakend ไม่สามารถทำ Cluster ได้ภายในตัวเอง จึงอาศัย Font-end load balancer เข้ามาเป็นตัวช่วย ซึ่ง KeyPoint คือ
+  ## A. ต้องมี Font-end Load balancer เช่น nginx
+  ## B. ในแต่ละ Node จะต้องรันด้วย Configuration เดียวกัน
+  nginx-krakend-cluster:
+    container_name: "nginx-krakend-cluster"
+    image: nginx:1.27.5-alpine3.21-slim
+    ports:
+      - 8998:8080
+    volumes:
+      - ./nginx-template:/etc/nginx
+    command: [nginx-debug, '-g', 'daemon off;']
+    networks:
+      - krakend-network
+
 
   prometheus:
     container_name: "prometheus"

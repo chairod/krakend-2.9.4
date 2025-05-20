@@ -1,5 +1,5 @@
 services:
-  backend_api_s1:
+  backend-api-s1:
     container_name: krakend_api_service1
     image: openjdk:21-slim
     volumes:
@@ -11,7 +11,7 @@ services:
     command: ["java", "-jar", "/service/api/krakend-api-0.0.1.jar"]
 
 
-  backend_api_s2:
+  backend-api-s2:
     container_name: krakend_api_service2
     image: openjdk:21-slim
     volumes:
@@ -23,7 +23,7 @@ services:
     command: ["java", "-jar", "/service/api/krakend-api-0.0.1.jar"]
 
 
-  backend_api_s3:
+  backend-api-s3:
     container_name: krakend_api_service3
     image: openjdk:21-slim
     volumes:

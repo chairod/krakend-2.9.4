@@ -1,0 +1,62 @@
+services:
+  nginx-service:
+    container_name: nginx-service
+    image: nginx:1.27.5-alpine3.21-slim
+    volumes:
+      - ./templates:/etc/nginx
+    ports:
+      - 8998:8080
+    command: [nginx-debug, '-g', 'daemon off;']
+    networks:
+      - nginx-network
+    depends_on:
+      - backend-api-s1
+      - backend-api-s2
+      - backend-api-s3
+
+  backend-api-s1:
+    container_name: nginx_api_service1
+    image: openjdk:21-slim
+    volumes:
+      - ../springboot/services/jar:/service/api
+    environment:
+      - DOCKER_HOST_NAME=backend_api_s1
+    ports:
+      - 8001:8003
+    command: ["java", "-jar", "/service/api/krakend-api-0.0.1.jar"]
+    networks:
+      - nginx-network
+
+
+  backend-api-s2:
+    container_name: nginx_api_service2
+    image: openjdk:21-slim
+    volumes:
+      - ../springboot/services/jar:/service/api
+    ports:
+      - 8002:8003
+    environment:
+      - DOCKER_HOST_NAME=backend_api_s2
+    command: ["java", "-jar", "/service/api/krakend-api-0.0.1.jar"]
+    networks:
+      - nginx-network
+
+
+  backend-api-s3:
+    container_name: nginx_api_service3
+    image: openjdk:21-slim
+    volumes:
+      - ../springboot/services/jar:/service/api
+    ports:
+      - 8003:8003
+    environment:
+      - DOCKER_HOST_NAME=backend_api_s3
+    command: ["java", "-jar", "/service/api/krakend-api-0.0.1.jar"]
+    networks:
+      - nginx-network
+
+
+
+networks:
+  nginx-network:
+    driver: bridge

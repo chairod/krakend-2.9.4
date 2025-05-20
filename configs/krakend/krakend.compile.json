@@ -1,0 +1,325 @@
+{
+  "": "https://www.krakend.io/schema/krakend.json",
+  "version": 3,
+  "name": "Krakend playground krakend-node3",
+  "timeout": "3000ms",
+  "cache_ttl": "300s",
+  "output_encoding": "json",
+  "port": 8080,
+  "debug_endpoint": true,
+  "echo_endpoint": true,
+  "extra_config": {
+    "security/cors": {
+      "allow_methods": [
+        "POST",
+        "GET"
+      ],
+      "allow_origins": [
+        "localhost",
+        "http://127.0.0.1:5500"
+      ],
+      "allow_headers": [
+        "Origin",
+        "Authorization",
+        "Content-Type"
+      ],
+      "max_age": "12h"
+    },
+    "telemetry/metrics": {
+      "@comment": "เป็นการเปิดใช้งาน Metrics API ที่รันใช้งานคนละ Port กับ Krakend ซึ่งใช้ร่วมกับ InfluDB",
+      "backend_disabled": false,
+      "collection_time": "60s",
+      "endpoint_disabled": false,
+      "listen_address": ":8090",
+      "router_disabled": false,
+      "proxy_disabled": false
+    },
+    "telemetry/opentelemetry": {
+      "@comment": "",
+      "service_name": "krakend_telemtry_prometheus_service",
+      "metric_reporting_period": 1,
+      "trace_sample_rate": 0.25,
+      "layers": {
+        "global": {
+          "disable_metrics": false,
+          "disable_traces": false
+        },
+        "proxy": {
+          "disable_metrics": false,
+          "disable_traces": false
+        },
+        "backend": {
+          "metrics": {
+            "detailed_connection": true,
+            "read_payload": true
+          }
+        }
+      },
+      "exporters": {
+        "prometheus": [
+          {
+            "name": "local_prometheus",
+            "disable_metrics": false,
+            "port": 9091,
+            "process_metrics": true,
+            "go_metrics": true
+          }
+        ]
+      }
+    }
+  },
+  "endpoints": [
+    {
+      "endpoint": "/api/v1/allow_cors",
+      "method": "GET",
+      "output_encoding": "json",
+      "backend": [
+        {
+          "url_pattern": "/api/v1/user/getAll",
+          "method": "GET",
+          "sd": "static",
+          "disable_host_sanitize": false,
+          "encoding": "json",
+          "is_collection": true,
+          "host": [
+            "http://backend-api-s1:8003"
+          ]
+        }
+      ]
+    },
+    {
+      "@comment": "จำกัดจำนวนคำขอสูงสุดไม่เกิน 100 คำขอ",
+      "endpoint": "/api/v1/rat_limit_100_per_1s",
+      "method": "GET",
+      "output_encoding": "json",
+      "extra_config": {
+        "qos/ratelimit/router": {
+          "max_rate": 100,
+          "every": "1s"
+        }
+      },
+      "backend": [
+        {
+          "url_pattern": "/api/v1/user/getAll",
+          "method": "GET",
+          "sd": "static",
+          "disable_host_sanitize": false,
+          "encoding": "json",
+          "is_collection": true,
+          "host": [
+            "http://backend-api-s1:8003"
+          ]
+        }
+      ]
+    },
+    {
+      "@comment": "กำหนด Load balance ด้วย Round-Robin",
+      "endpoint": "/api/v1/load_balance_round_robin",
+      "method": "GET",
+      "output_encoding": "json",
+      "extra_config": {
+        "qos/ratelimit/router": {
+          "max_rate": 100,
+          "every": "1s"
+        }
+      },
+      "backend": [
+        {
+          "url_pattern": "/api/v1/user/getAll",
+          "method": "GET",
+          "sd": "static",
+          "disable_host_sanitize": false,
+          "encoding": "json",
+          "is_collection": true,
+          "host": [
+            "http://backend-api-s1:8003",
+            "http://backend-api-s2:8003",
+            "http://backend-api-s3:8003"
+          ]
+        }
+      ]
+    },
+    {
+      "@comment": "ทดสอบการทำ Krakend Cluster",
+      "endpoint": "/api/v1/cluster",
+      "method": "GET",
+      "output_encoding": "json",
+      "backend": [
+        {
+          "url_pattern": "/api/v1/user/getAllWithCluster",
+          "input_headers": ["*"],
+          "method": "GET",
+          "extra_config": {
+            "modifier/martian": {
+              "header.Modifier": {
+                "scope": [
+                  "request"
+                ],
+                "name": "X-Upstream-Addr",
+                "value": "krakend-node3"
+              }
+            }
+          },
+          "sd": "static",
+          "disable_host_sanitize": false,
+          "encoding": "json",
+          "is_collection": true,
+          "host": [
+            "http://backend-api-s1:8003",
+            "http://backend-api-s2:8003",
+            "http://backend-api-s3:8003"
+          ]
+        }
+      ]
+    },
+    {
+      "@comment": "Circuit Breaker ป้องกันการทำงานของหลังบ้านที่หนักเกินไป",
+      "endpoint": "/api/v1/circuit_breaker",
+      "method": "GET",
+      "output_encoding": "json",
+      "backend": [
+        {
+          "url_pattern": "/api/v1/user/getAllRandomThrow",
+          "method": "GET",
+          "sd": "static",
+          "disable_host_sanitize": false,
+          "encoding": "json",
+          "is_collection": true,
+          "host": [
+            "http://backend-api-s1:8003"
+          ],
+          "extra_config": {
+            "qos/circuit-breaker": {
+              "interval": 10,
+              "max_errors": 5,
+              "log_status_change": true,
+              "name": "cb-break-1",
+              "timeout": 5
+            }
+          }
+        }
+      ]
+    },
+    {
+      "@comment": "",
+      "endpoint": "/api/v1/test_call_container_name",
+      "method": "GET",
+      "output_encoding": "json",
+      "backend": [
+        {
+          "url_pattern": "/api/v1/user/getAll",
+          "method": "GET",
+          "sd": "static",
+          "encoding": "json",
+          "is_collection": true,
+          "disable_host_sanitize": false,
+          "host": [
+            "http://backend-api-s1:8003"
+          ]
+        }
+      ]
+    },
+    {
+      "@comment": "",
+      "endpoint": "/api/v1/get_user_with_array",
+      "method": "GET",
+      "output_encoding": "json",
+      "backend": [
+        {
+          "url_pattern": "/api/v1/user/getAllRandomThrow",
+          "encoding": "json",
+          "is_collection": true,
+          "sd": "static",
+          "method": "GET",
+          "host": [
+            "http://backend-api-s3:8003"
+          ],
+          "disable_host_sanitize": false
+        }
+      ]
+    },
+    {
+      "endpoint": "/api/v1/get_user_mapping",
+      "method": "GET",
+      "output_encoding": "json",
+      "backend": [
+        {
+          "url_pattern": "/api/v1/user/getAllRandomThrow",
+          "encoding": "json",
+          "is_collection": true,
+          "sd": "static",
+          "method": "GET",
+          "host": [
+            "http://backend-api-s1:8003"
+          ],
+          "mapping": {
+            "collection": "users"
+          },
+          "disable_host_sanitize": false,
+          "extra_config": {
+            "qos/circuit-breaker": {
+              "interval": 10,
+              "max_errors": 2,
+              "timeout": 0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "endpoint": "/api/v1/get_user_deny",
+      "method": "GET",
+      "output_encoding": "json",
+      "backend": [
+        {
+          "url_pattern": "/api/v1/user/getAll",
+          "encoding": "json",
+          "is_collection": true,
+          "sd": "static",
+          "method": "GET",
+          "host": [
+            "http://backend-api-s1:8003"
+          ],
+          "extra_config": {
+            "proxy": {
+              "flatmap_filter": [
+                {
+                  "type": "del",
+                  "args": [
+                    "collection.*.citizenId"
+                  ]
+                },
+                {
+                  "type": "move",
+                  "args": [
+                    "collection",
+                    "users"
+                  ]
+                }
+              ]
+            }
+          },
+          "disable_host_sanitize": false
+        }
+      ]
+    },
+    {
+      "endpoint": "/api/v1/get_user/{prefix}",
+      "method": "GET",
+      "output_encoding": "json-collection",
+      "backend": [
+        {
+          "url_pattern": "/api/v1/user/getAll/{prefix}",
+          "encoding": "json",
+          "is_collection": true,
+          "sd": "static",
+          "method": "GET",
+          "host": [
+            "http://backend-api-s1:8003"
+          ],
+          "disable_host_sanitize": false
+        }
+      ]
+    }
+  ]
+}

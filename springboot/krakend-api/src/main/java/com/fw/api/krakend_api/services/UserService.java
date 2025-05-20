@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fw.api.krakend_api.model.user.UserBuyModel;
 import com.fw.api.krakend_api.model.user.UserModel;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.core.MediaType;
 
 import java.math.BigDecimal;
@@ -17,12 +18,18 @@ import java.util.Random;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestHeader;
+
 
 @RestController
 @RequestMapping("/api/v1/user")
 public class UserService {
+
+    @Autowired(required = true)
+    HttpServletRequest _req;
 
     static Random _random = new Random();
     static BigDecimal _basePrice = new BigDecimal(100);
@@ -44,6 +51,7 @@ public class UserService {
     @GetMapping(value = { "getAll/{prefix}", "getAll" }, produces = MediaType.APPLICATION_JSON)
     public @ResponseBody List<UserModel> getUsers(@PathVariable(name = "prefix", required = false) String prefix) {
         final String dockerHost = System.getenv("DOCKER_HOST_NAME");
+        final String krakendNode = System.getenv("KRAKEND_NODE");
         List<UserModel> users = new ArrayList<UserModel>();
         for (int ix = 0; ix < 10; ix++) {
             UserModel usrModel = new UserModel();
@@ -51,11 +59,34 @@ public class UserService {
             usrModel.setUserName(String.format("%sUserName %s", prefix == null ? "" : prefix, ix));
             usrModel.setCitizenId(UUID.randomUUID().toString());
             usrModel.setDockerName(dockerHost);
+            usrModel.setKrakendNode(krakendNode);
             users.add(usrModel);
         }
 
         return users;
     }
+
+    @GetMapping(value = { "getAllWithCluster" }, produces = MediaType.APPLICATION_JSON)
+    public @ResponseBody List<UserModel> getUsersWithCluster(@RequestHeader(value = "X-Upstream-Addr", required = false) String krakendNode, @RequestHeader(value = "X-HttpRequest-Test", required = false) String xHttpRequestTest) {
+        final String dockerHost = System.getenv("DOCKER_HOST_NAME");
+        if(null == krakendNode)
+            krakendNode = xHttpRequestTest;
+
+
+        List<UserModel> users = new ArrayList<UserModel>();
+        for (int ix = 0; ix < 10; ix++) {
+            UserModel usrModel = new UserModel();
+            usrModel.setUserId(ix);
+            usrModel.setUserName(String.format("%sUserName %s", UUID.randomUUID().toString(), ix));
+            usrModel.setCitizenId(UUID.randomUUID().toString());
+            usrModel.setDockerName(dockerHost);
+            usrModel.setKrakendNode(krakendNode);
+            users.add(usrModel);
+        }
+
+        return users;
+    }
+    
 
     @GetMapping(value = {"/getAllRandomThrow/{prefix}", "/getAllRandomThrow"}, produces = MediaType.APPLICATION_JSON)
     public List<UserModel> getAllRamdonThrow(@PathVariable(name = "prefix", required = false) String prefix)
@@ -66,6 +97,7 @@ public class UserService {
 
 
         final String dockerHost = System.getenv("DOCKER_HOST_NAME");
+        final String krakendNode = System.getenv("KRAKEND_NODE");
         List<UserModel> users = new ArrayList<UserModel>();
         for (int ix = 0; ix < 10; ix++) {
             UserModel usrModel = new UserModel();
@@ -73,6 +105,7 @@ public class UserService {
             usrModel.setUserName(String.format("%sUserName %s", prefix == null ? "" : prefix, ix));
             usrModel.setCitizenId(UUID.randomUUID().toString());
             usrModel.setDockerName(dockerHost);
+            usrModel.setKrakendNode(krakendNode);
             users.add(usrModel);
         }
 

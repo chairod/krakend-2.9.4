@@ -17,4 +17,7 @@ public class UserModel implements iServiceModel {
 
     @Getter @Setter
     private String DockerName;
+
+    @Getter @Setter
+    private String KrakendNode;
 }

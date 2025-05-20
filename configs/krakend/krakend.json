@@ -1,7 +1,7 @@
 {
   "$schema": "https://www.krakend.io/schema/krakend.json",
   "version": 3,
-  "name": "Krakend playground",
+  "name": "Krakend playground {{ env KRAKEND_NODE }}",
   "timeout": "3000ms",
   "cache_ttl": "300s",
   "output_encoding": "json",
@@ -126,6 +126,27 @@
       "backend": [
         {
           "url_pattern": "/api/v1/user/getAll",
+          "method": "GET",
+          "sd": "static",
+          "disable_host_sanitize": false,
+          "encoding": "json",
+          "is_collection": true,
+          "host": [
+            "http://backend-api-s1:8003",
+            "http://backend-api-s2:8003",
+            "http://backend-api-s3:8003"
+          ]
+        }
+      ]
+    },
+    {
+      "@comment": "ทดสอบการทำ Krakend Cluster",
+      "endpoint": "/api/v1/cluster",
+      "method": "GET",
+      "output_encoding": "json",
+      "backend": [
+        {
+          "url_pattern": "/api/v1/user/getAllWithCluster",
           "method": "GET",
           "sd": "static",
           "disable_host_sanitize": false,
