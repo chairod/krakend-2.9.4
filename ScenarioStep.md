@@ -101,7 +101,8 @@ JMeter
 2. ในแต่ละ Instance ของ Krakend ให้รัน Configuration file เดียวกัน
 
 การทดสอบนี้จะใช้ nginx (Font-end load balancer) ทำ Load balance และสร้าง Node ของ Krakend ด้วย Docker Container แยกออกเป็น 3 Nodes และในแต่ละ Node จะใช้ Configuration file เดียวกัน  
-![image](https://github.com/user-attachments/assets/84d14d24-322d-483c-b4d4-5ebb152ef1f7)
+![image](https://github.com/user-attachments/assets/b317a147-aecf-40bf-a197-9b51519d226a)  
+
    
 
 ```
