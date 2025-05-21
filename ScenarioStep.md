@@ -97,8 +97,11 @@ JMeter
 
 **การทำ Cluster**  
 การรัน Cluster ของ Krakend ไม่มีความจำเป็นต้องลง Software ใดๆเพิ่มเติม ซึ่งใช้หลักการเพียง 2 ข้อ ได้แก่  
-1. มี Font-End Load balance ซึ่งจากตัวอย่างนี้จะใช้ nginx ในการทำ Load balance ที่อยู่ส่วนหน้า  
+1. มี Font-End Load balancer ซึ่งจากตัวอย่างนี้จะใช้ nginx ในการทำ Load balance ที่อยู่ส่วนหน้า  
 2. ในแต่ละ Instance ของ Krakend ให้รัน Configuration file เดียวกัน
+
+การทดสอบนี้จะใช้ nginx (Font-end load balancer) ทำ Load balance และสร้าง Node ของ Krakend ด้วย Docker Container แยกออกเป็น 3 Nodes และในแต่ละ Node จะใช้ Configuration file เดียวกัน  
+
 ```
 http://localhost:8998/api/v1/cluster
 ```
