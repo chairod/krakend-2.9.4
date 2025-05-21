@@ -6,7 +6,7 @@
     2.2 Rate limit
 3. Traffic Management   
   3.1 Load Balance  
-  3.2 Circuit Breaker
+  3.2 Circuit Breaker   
   3.3 Cluster
 
 
