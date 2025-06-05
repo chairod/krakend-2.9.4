@@ -58,7 +58,7 @@ docker-compose up
 ```
 Jmeter
 ```  
-ให้เลือกไฟล์ **jmeter-concurrency.jmx** เข้าไปในโปรแกรม Jmeter  
+ให้เลือกไฟล์ **jmeter-concurrent.jmx** เข้าไปในโปรแกรม Jmeter  
 
 ยิงทดสอบ 200 Request/1 วินาที ตอบ 503-Service Unavailable มาจำนวน 68 ครั้ง คิดเป็น 34%
 ![image](https://github.com/user-attachments/assets/5b88a14a-7ca2-4071-9623-573c8e865866)  
